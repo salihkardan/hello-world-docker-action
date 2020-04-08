@@ -27,7 +27,7 @@ jobs:
       run: echo "The time was ${{ steps.hello.outputs.time }}"  
 
     - name: Hello
-      if: ${BRANCH_NAME} == 'master'
+      if: env.BRANCH_NAME == 'master'
       run: echo "Hello from master branch ${GITHUB_REF##*/}"
 
     - name: Configure AWS Credentials

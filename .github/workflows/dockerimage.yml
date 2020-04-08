@@ -10,6 +10,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
+
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
 
@@ -32,10 +33,13 @@ jobs:
         echo "Hello from branch ${BRANCH_NAME}"
         echo "Hello from branch ${{env.BRANCH_NAME}}"
 
-    - name: Slack Notification
-      uses: rtCamp/action-slack-notify@v2.0.1
+    - uses: actions/checkout@master
+    - name: Slack Notification Demo
+      uses: bryan-nice/slack-notification@master
       env:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_TITLE: 'Slack Notification Demo'
+        SLACK_MESSAGE: 'Demo''ing the Slack Notification'
       if: always()
 
     - name: Configure AWS Credentials

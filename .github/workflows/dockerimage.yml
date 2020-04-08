@@ -12,7 +12,11 @@ jobs:
     - uses: actions/checkout@v1
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
-      
+
+    - name: Extract branch name
+      shell: bash
+      run: echo "::set-env name=BRANCH_NAME::$(echo ${GITHUB_REF#refs/heads/} | sed 's/\//_/g')"
+
     - name: Hello world action step
       id: hello
       uses: actions/hello-world-docker-action@v1
@@ -23,7 +27,7 @@ jobs:
       run: echo "The time was ${{ steps.hello.outputs.time }}"  
 
     - name: Hello
-      if: ${{GITHUB_REF##*/ == 'master'}}
+      if: ${BRANCH_NAME} == 'master'
       run: echo "Hello from master branch ${GITHUB_REF##*/}"
 
     - name: Configure AWS Credentials

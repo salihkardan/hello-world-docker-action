@@ -33,6 +33,15 @@ jobs:
         echo "Hello from branch ${BRANCH_NAME}"
         echo "Hello from branch ${{env.BRANCH_NAME}}"
 
+    - name: Notify Slack
+      uses: drilonrecica/action-slack-notify@0.0.3
+      env:
+        SLACK_COLOR: '#3278BD'
+        SLACK_ICON: https://avatars1.githubusercontent.com/u/58308957?s=48
+        SLACK_MESSAGE: '${{env.BRANCH_NAME}} branch is deployed'
+        SLACK_TITLE: Post Title
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+
     - name: Slack Notification
       uses: rtCamp/action-slack-notify@v2.0.0
       env:

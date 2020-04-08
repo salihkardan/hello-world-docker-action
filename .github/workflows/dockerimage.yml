@@ -35,7 +35,7 @@ jobs:
     - name: Send slack notification
       uses: rtCamp/action-slack-notify@v2.0.1
       env:
-        SLACK_WEBHOOK: "https://hooks.slack.com/services/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"
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1

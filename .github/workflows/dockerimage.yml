@@ -39,7 +39,7 @@ jobs:
         SLACK_ICON: https://avatars1.githubusercontent.com/u/58308957?s=48
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         SLACK_TITLE: 'Picus Digital Deployment'
-        SLACK_MESSAGE: '${{env.BRANCH_NAME}} branch is deployed'
+        SLACK_MESSAGE: '${{job.status}}'
       if: always()
 
     - name: Configure AWS Credentials

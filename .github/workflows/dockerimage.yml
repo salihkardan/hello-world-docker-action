@@ -33,7 +33,7 @@ jobs:
         echo "Hello from branch ${{env.BRANCH_NAME}}"
 
     - name: Slack Notification
-      uses: rtCamp/action-slack-notify@v2.0.0
+      uses: rtCamp/action-slack-notify@v2.0.1
       env:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
       if: always()
@@ -49,14 +49,6 @@ jobs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
 
-    - name: Build, tag, and push image to Amazon ECR
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: status
-        IMAGE_TAG: ${{ github.sha }}
-      run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         
     - name: Deploy to Amazon ECS service
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
@@ -64,7 +56,4 @@ jobs:
         task-definition: task-definition.json
         service: github-actions
         cluster: github-actions
-        
-    - name: Logout of Amazon ECR
-      if: always()
-      run: docker logout ${{ steps.login-ecr.outputs.registry }} 
+

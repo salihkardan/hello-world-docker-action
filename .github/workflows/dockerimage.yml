@@ -23,8 +23,8 @@ jobs:
       run: echo "The time was ${{ steps.hello.outputs.time }}"  
 
     - name: Hello
-      if: github.ref == 'master'
-      run: echo "Hello from master branch"
+      if: github.ref == 'refs/heads/master'
+      run: echo "Hello from master branch ${GITHUB_REF##*/}"
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1

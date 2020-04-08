@@ -36,9 +36,8 @@ jobs:
       with:
         status: ${{ job.status }}
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # optional
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }} # required
-      if: always() # Pick up events even if the job fails or is canceled.
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+      if: always()
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1

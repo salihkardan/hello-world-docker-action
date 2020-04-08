@@ -33,14 +33,12 @@ jobs:
         echo "Hello from branch ${BRANCH_NAME}"
         echo "Hello from branch ${{env.BRANCH_NAME}}"
 
-    - uses: actions/checkout@master
-    - name: Slack Notification Demo
-      uses: bryan-nice/slack-notification@master
+    - uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
       env:
-        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-        SLACK_TITLE: 'Slack Notification Demo'
-        SLACK_MESSAGE: 'Demo''ing the Slack Notification'
-        SLACK_CHANNEL: 'slack-test'
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
       if: always()
 
     - name: Configure AWS Credentials

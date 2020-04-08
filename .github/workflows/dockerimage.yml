@@ -28,7 +28,10 @@ jobs:
 
     - name: Hello
       if: env.BRANCH_NAME == 'master'
-      run: echo "Hello from master branch ${GITHUB_REF##*/}"
+      run: |
+        echo "Hello from branch ${BRANCH_NAME}"
+        echo "Hello from branch env.BRANCH_NAME"
+
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1

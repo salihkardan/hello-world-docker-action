@@ -33,16 +33,6 @@ jobs:
         echo "Hello from branch ${BRANCH_NAME}"
         echo "Hello from branch ${{env.BRANCH_NAME}}"
 
-    - name: Slack Notification Demo
-      uses: bryan-nice/slack-notification@master
-      env:
-        SLACK_CHANNEL: 'operations'
-        SLACK_ICON: https://avatars1.githubusercontent.com/u/58308957?s=48
-        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-        SLACK_TITLE: 'Picus Digital Deployment'
-        SLACK_MESSAGE: 'Job status: ${{job.status}}'
-      if: always()
-
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -62,3 +52,12 @@ jobs:
         service: github-actions
         cluster: github-actions
 
+    - name: Slack Notification Demo
+      uses: bryan-nice/slack-notification@master
+      env:
+        SLACK_CHANNEL: 'operations'
+        SLACK_ICON: https://avatars1.githubusercontent.com/u/58308957?s=48
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_TITLE: 'Picus Digital Deployment'
+        SLACK_MESSAGE: 'Job status: ${{job.status}}'
+      if: always()

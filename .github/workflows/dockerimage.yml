@@ -18,11 +18,40 @@ jobs:
       shell: bash
       run: echo "::set-env name=BRANCH_NAME::$(echo ${GITHUB_REF#refs/heads/} | sed 's/\//_/g')"
 
+    - name: Configure AWS Credentials for Ireland (dev & staging)
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.ACCESS_KEY }}
+        aws-secret-access-key: ${{ secrets.SECRET_KEY }}
+        aws-region: eu-west-1
+
+    - name: Configure AWS Credentials for N.Virginia (prod)
+      if: env.BRANCH_NAME == 'master'
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.ACCESS_KEY }}
+        aws-secret-access-key: ${{ secrets.SECRET_KEY }}
+        aws-region: us-east-1
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Build, tag, and push image to Amazon ECR
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: test
+        IMAGE_TAG: ${GITHUB_REF##*/}
+      run: |
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:${GITHUB_REF##*/} .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:${GITHUB_REF##*/}
+
     - name: Hello world action step
       id: hello
       uses: actions/hello-world-docker-action@v1
       with:
-        who-to-greet: 'Mona the Octocat'      
+        who-to-greet: 'Mona the Octocat'
+
     # Use the output from the `hello` step
     - name: Get the output time
       run: echo "The time was ${{ steps.hello.outputs.time }}"  
@@ -52,12 +81,12 @@ jobs:
 #        service: github-actions
 #        cluster: github-actions
 
-    - name: Slack Notification Demo
-      uses: bryan-nice/slack-notification@master
-      env:
-        SLACK_CHANNEL: 'operations'
-        SLACK_ICON: https://avatars1.githubusercontent.com/u/58308957?s=48
-        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-        SLACK_TITLE: 'Picus Digital Deployment'
-        SLACK_MESSAGE: 'Job status: ${{job.status}}'
-      if: always()
+#    - name: Slack Notification Demo
+#      uses: bryan-nice/slack-notification@master
+#      env:
+#        SLACK_CHANNEL: 'operations'
+#        SLACK_ICON: https://avatars1.githubusercontent.com/u/58308957?s=48
+#        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+#        SLACK_TITLE: 'Picus Digital Deployment'
+#        SLACK_MESSAGE: 'Job status: ${{job.status}}'
+#      if: always()
